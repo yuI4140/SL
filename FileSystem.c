@@ -20,8 +20,9 @@ void freeFs(Fs* fs) {
     fclose(fs->file);
 }
 
-long fileSize(Fs fs) {
-    return fs.sz;
+void fileSize(Fs fs) {
+    size_t size= ftell(fs.file);
+    fs.sz=size; 
 }
 
 void readFromFile(Fs fs, long offset, void* data, long size) {
@@ -39,7 +40,7 @@ void appendToFile(Fs fs, void* data, long size) {
     fs.sz += size;
 }
 
-void deleteFromFile(Fs fs, long offset, long size) {
+void deleteFromFl(Fs fs, long offset, long size) {
     char* buffer = malloc(fs.sz - size);
     fseek(fs.file, 0, SEEK_SET);
     fread(buffer, offset, 1, fs.file);
