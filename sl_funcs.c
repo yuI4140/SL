@@ -1,13 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-
-typedef struct {
-    int r;
-    int g;
-    int b;
-} Rgb;
-
+#include "Color.c"
 char* substr(char* src, int start, int end) {
     int len = strlen(src);
     if (end < 0) {

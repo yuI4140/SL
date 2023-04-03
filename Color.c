@@ -1,14 +1,18 @@
-typedef struct Rgb {
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+typedef struct {
     int r;
     int g;
     int b;
 } Rgb;
 
-typedef struct Hex {
+typedef struct  {
     char* value;
 } Hex;
 
-typedef struct Color {
+typedef struct {
     Rgb rgb;
     Hex hex;
 } Color;
