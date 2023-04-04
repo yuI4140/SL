@@ -87,7 +87,7 @@ char* substr(char* src, int start, int end) {
         return NULL;
     }
 
-    strncpy_s(subStr, src + start, subLen);
+    strncpy(subStr, src + start, subLen);
     subStr[subLen] = '\0';
 
     return subStr;
@@ -128,11 +128,11 @@ char* replace(char* oldStr, char* newStr, char* src) {
     while (count--) {
         ins = strstr(src, oldStr);
         lenSrc = ins - src;
-        tmp = strncpy_s(tmp, src, lenSrc) + lenSrc;
-        tmp = strcpy_s(tmp, newStr) + lenNew;
+        tmp = strncpy(tmp, src, lenSrc) + lenSrc;
+        tmp = strcpy(tmp, newStr) + lenNew;
         src += lenSrc + lenOld;
     }
-    strcpy_s(tmp, src);
+    strcpy(tmp, src);
 
     return result;
 }
@@ -182,7 +182,7 @@ void* ToType(void* anyType, const char* dest) {
         return (unsigned int*) anyType;
     } else if (strstr(dest, "[]") != NULL) {
          int elementSize;
-        const char* elementTypeStr = strtok_s((char*)dest, "[]");
+        const char* elementTypeStr = strtok((char*)dest, "[]");
         if (strcmp(elementTypeStr, "char*") == 0) {
             elementSize = sizeof(char*);
         } else if (strcmp(elementTypeStr, "int") == 0) {
@@ -197,7 +197,7 @@ void* ToType(void* anyType, const char* dest) {
             return NULL;
         }
 
-        const char* lengthStr = strtok_s(NULL, "[]");
+        const char* lengthStr = strtok(NULL, "[]");
         if (lengthStr == NULL) {
             return NULL;
         }
