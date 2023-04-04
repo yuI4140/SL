@@ -1,7 +1,72 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <errno.h>
+#include <stdbool.h>
 #include "Color.c"
+
+int toInt(char *str) {
+  errno = 0;
+  long result = strtol(str, NULL, 10);
+  if (errno != 0 || result > INT_MAX || result < INT_MIN) {
+    fprintf(stderr, "Error converting string '%s' to integer\n", str);
+    exit(EXIT_FAILURE);
+  }
+  return (int)result;
+}
+
+float toFloat(char *str) {
+  errno = 0;
+  char *endptr;
+  float result = strtof(str, &endptr);
+  if (errno != 0 || *endptr != '\0') {
+    fprintf(stderr, "Error converting string '%s' to float\n", str);
+    exit(EXIT_FAILURE);
+  }
+  return result;
+}
+
+double toDouble(char *str) {
+  errno = 0;
+  char *endptr;
+  double result = strtod(str, &endptr);
+  if (errno != 0 || *endptr != '\0') {
+    fprintf(stderr, "Error converting string '%s' to double\n", str);
+    exit(EXIT_FAILURE);
+  }
+  return result;
+}
+
+char *intToString(int num) {
+  char *str = malloc(12 * sizeof(char));
+  if (str == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+    exit(EXIT_FAILURE);
+  }
+  sprintf(str, "%d", num);
+  return str;
+}
+
+char *floatToString(float num) {
+  char *str = malloc(32 * sizeof(char));
+  if (str == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+    exit(EXIT_FAILURE);
+  }
+  sprintf(str, "%f", num);
+  return str;
+}
+
+char *doubleToString(double num) {
+  char *str = malloc(32 * sizeof(char));
+  if (str == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+    exit(EXIT_FAILURE);
+  }
+  sprintf(str, "%lf", num);
+  return str;
+}
 char* substr(char* src, int start, int end) {
     int len = strlen(src);
     if (end < 0) {
@@ -10,13 +75,23 @@ char* substr(char* src, int start, int end) {
     if (start < 0) {
         start = len + start;
     }
+
+    if (start >= len || start >= end || end > len || end < 0) {
+       return NULL;
+    }
+
     int subLen = end - start;
     char* subStr = malloc(subLen + 1);
+
+    if (!subStr) {
+        return NULL;
+    }
+
     strncpy(subStr, src + start, subLen);
     subStr[subLen] = '\0';
+
     return subStr;
 }
-
 int contains(char* str1, char* str2) {
     if (strstr(str1, str2) != NULL) {
         return 1;
@@ -74,13 +149,19 @@ void exception(const char* msg, ...) {
     va_end(argp);
     exit(1);
 }
-
 void cPrint(Rgb rgb, const char* format, ...) {
     printf("\x1b[38;2;%d;%d;%dm", rgb.r, rgb.g, rgb.b);
+
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
+    int ret = vprintf(format, args);
     va_end(args);
+
+    if (ret < 0) {
+        fprintf(stderr, "Error occurred during print.\n");
+        return;
+    }
+
     printf("\x1b[0m");
 }
 
@@ -106,7 +187,7 @@ void* ToType(void* anyType, const char* dest) {
         return (unsigned int*) anyType;
     } else if (strstr(dest, "[]") != NULL) {
          int elementSize;
-        const char* elementTypeStr = strtok(dest, "[]");
+        const char* elementTypeStr = strtok((char*)dest, "[]");
         if (strcmp(elementTypeStr, "char*") == 0) {
             elementSize = sizeof(char*);
         } else if (strcmp(elementTypeStr, "int") == 0) {
