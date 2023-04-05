@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errnos.h>
+#include <errno.h>
 #include "sl_funcs.c"
 #define MAX_ERROR_MSG_LENGTH 256
 
