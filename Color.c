@@ -1,9 +1,8 @@
+#pragma once
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-#ifdef _COLOR
-#define _COLOR
 typedef struct {
     int r;
     int g;
@@ -34,5 +33,4 @@ Rgb hexToRgb(Hex hex) {
     }
     return rgb;
 }
-#endif  /* #_COLOR*/
 

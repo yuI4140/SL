@@ -1,11 +1,10 @@
+#pragma once
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef FS_SYSTEM
-#define FS_SYSTEM
 typedef struct {
   FILE *file;
   long sz;
@@ -107,4 +106,3 @@ void resizeFile(Fs fs, long newSize) {
   }
   fs.sz = newSize;
 }
-#endif /*FS_SYSTEM*/

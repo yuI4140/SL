@@ -1,5 +1,5 @@
+#pragma once
 #include <stdio.h>
-#define _ERR
 #include "Err.c"
 #include <stdarg.h>
 #define MAX_FORMAT_SIZE 256
