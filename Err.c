@@ -10,14 +10,27 @@ typedef struct{
     int code;
     char message[MAX_ERROR_MSG_LENGTH];
 } Error;
-
+typedef struct {
+int code;
+char message[MAX_ERROR_MSG_LENGTH];
+Rgb color;
+}defErr;
+defErr getDefErr(Rgb color,Error error) {
+char* defBuf[sizeof(error.message)];
+    sprintf(defBuf,"Error %d: %s\n", error.code, error.message);
+defErr def={
+    .code=error.code,
+    .color=color,
+    .message=error.message
+};
+return def;
+}
 void default_error_handler(Error error) {
 char* defBuf[sizeof(error.message)];
     sprintf(defBuf,"Error %d: %s\n", error.code, error.message);
-    cException(RED,defBuf);
+    cException(WHITE,defBuf);
     exit(error.code);
 }
-
 typedef void (*ErrorHandler)(Error);
 
 void handle_error(ErrorHandler handler, Error error) {
@@ -25,6 +38,15 @@ void handle_error(ErrorHandler handler, Error error) {
         handler(error);
     } else {
         default_error_handler(error);
+    }
+}
+void cHandleErr(Rgb color,ErrorHandler handler, Error error) {
+    if (handler != NULL) {
+        handler(error);
+    } else {
+        defErr err=getDefErr(color,error);
+        cException(err.color,err.message);
+        exit(err.code);
     }
 }
 
@@ -59,6 +81,11 @@ Error make_error(int code, const char *message, const char *file, int line) {
 #define CHECK_MSG(condition, message) do { \
     if ((condition)) { \
         handle_error(NULL, MAKE_ERROR(1, message)); \
+    } \
+} while (0)
+#define CCHECK_MSG(color,condition, message) do { \
+    if ((condition)) { \
+        cHandleErr(color,NULL,MAKE_ERROR(1, message));\
     } \
 } while (0)
 
