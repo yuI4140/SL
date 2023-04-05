@@ -68,7 +68,7 @@ Error make_error(int code, const char *message, const char *file, int line) {
 
 #define TRY_WITH_HANDLER(func, handler) do { \
     Error __error__; \
-    if ((__error__ = func).code != 0) { \
+    if ((__errr__ = func).code != 0) { \
         handle_error(handler, __error__); \
     } \
 } while (0)
