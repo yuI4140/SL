@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include "sl_funcs.c"
 
 #define MAX_ERROR_MSG_LENGTH 256
 
@@ -11,7 +12,9 @@ typedef struct{
 } Error;
 
 void default_error_handler(Error error) {
-    fprintf(stderr, "Error %d: %s\n", error.code, error.message);
+char* defBuf[sizeof(error.message)];
+    sprintf(defBuf,"Error %d: %s\n", error.code, error.message);
+    cException(RED,defBuf);
     exit(error.code);
 }
 
@@ -48,13 +51,13 @@ Error make_error(int code, const char *message, const char *file, int line) {
 } while (0)
 
 #define CHECK(condition, code, message) do { \
-    if (!(condition)) { \
+    if ((condition)) { \
         handle_error(NULL, MAKE_ERROR(code, message)); \
     } \
 } while (0)
 
 #define CHECK_MSG(condition, message) do { \
-    if (!(condition)) { \
+    if ((condition)) { \
         handle_error(NULL, MAKE_ERROR(1, message)); \
     } \
 } while (0)
