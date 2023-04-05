@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#ifdef THREAD_LCL
+#define THREAD_LCL
 #if defined(_WIN32)
 #include <windows.h>
 #define sleep(x) Sleep(x)
@@ -85,4 +86,5 @@ int thread_equal(thread_t* thread1, thread_t* thread2)
     return (syscall(SYS_gettid) == syscall(SYS_gettid));
 #endif
 }
+#endif /*THREAD_LCL*/
 

@@ -4,8 +4,10 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <stdbool.h>
+#define _COLOR
 #include "Color.c"
-
+#ifdef _SL_FUNCS
+#define _SL_FUNCS
 int toInt(char *str) {
   errno = 0;
   long result = strtol(str, NULL, 10);
@@ -215,3 +217,4 @@ void* ToType(void* anyType, const char* dest) {
         return NULL;
     }
 }
+#endif /*_SL_FUNCS*/

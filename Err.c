@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#ifdef _ERR
+#define _ERR
+#define _SL_FUNCS
 #include "sl_funcs.c"
-
 #define MAX_ERROR_MSG_LENGTH 256
 
 typedef struct{
@@ -75,3 +77,4 @@ Error make_error(int code, const char *message, const char *file, int line) {
         handle_error(handler, __error__); \
     } \
 } while (0)
+#endif /*_ERR*/
