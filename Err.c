@@ -16,13 +16,14 @@ typedef struct {
   Rgb color;
 } defErr;
 defErr getDefErr(Rgb color, Error error) {
-  char *defBuf[sizeof(error.message)];
+  char defBuf[MAX_ERROR_MSG_LENGTH];
   sprintf(defBuf, "Error %d: %s\n", error.code, error.message);
-  defErr def = {.code = error.code, .color = color, .message = error.message};
+  defErr def = {.code = error.code, .color = color};
+  strcpy(def.message, defBuf);
   return def;
 }
 void default_error_handler(Error error) {
-  char *defBuf[sizeof(error.message)];
+  char defBuf[MAX_ERROR_MSG_LENGTH];
   sprintf(defBuf, "Error %d: %s\n", error.code, error.message);
   cException(WHITE, defBuf);
   exit(error.code);
@@ -53,7 +54,6 @@ Error make_error(int code, const char *message, const char *file, int line) {
   error.code = code;
   snprintf(error.message, MAX_ERROR_MSG_LENGTH, "%s (%s:%d)", message, file,
            line);
-  error.message[MAX_ERROR_MSG_LENGTH - 1] = '\0';
   return error;
 }
 

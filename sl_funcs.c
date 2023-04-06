@@ -47,7 +47,7 @@ char *intToString(int num) {
   sprintf(str, "%d", num);
   return str;
 }
-
+//  you should use floatToString_s if this not work 
 char *floatToString(float num) {
   char *str = malloc(32 * sizeof(char));
   if (str == NULL) {
@@ -57,7 +57,15 @@ char *floatToString(float num) {
   sprintf(str, "%f", num);
   return str;
 }
-
+char *floatToString_s(float num, int precision) {
+  char *str = malloc(64 * sizeof(char));
+  if (str == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+    exit(EXIT_FAILURE);
+  }
+  snprintf(str, 64, "%.*g", precision, num);
+  return str;
+}
 char *doubleToString(double num) {
   char *str = malloc(32 * sizeof(char));
   if (str == NULL) {
