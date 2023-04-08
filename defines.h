@@ -154,7 +154,6 @@ typedef void (*void_func_ptr)(void);
 #endif /*DEF_MATH*/
 
 #ifdef DEF_MEM
-#define Err
 #include "Err.c"
 #define defmemcpy(dest, src, n) \
 do { \
