@@ -115,6 +115,7 @@ typedef void (*void_func_ptr)(void);
 #endif /*DEF_STR*/
 
 #ifdef DEF_MATH
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 #include <time.h>
 #define GetRand(start, end) ({ \
     int range = (end) - (start) + 1; \
@@ -186,6 +187,10 @@ do { \
 #endif /*DEF_MEM*/
 
 #ifdef DEF_BIT
+#define XOR(a, b) ((a) ^ (b))
+#define AND(a, b) ((a) & (b))
+#define OR(a, b) ((a) | (b))
+#define NOT(x) (~(x))
 #define BitSet(x, n) ((x) |= (1ULL << (n)))
 #define BitClear(x, n) ((x) &= ~(1ULL << (n)))
 #define BitToggle(x, n) ((x) ^= (1ULL << (n)))
