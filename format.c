@@ -1,3 +1,4 @@
+#pragma once
 #include "core.h"
 void cPrint(Rgb rgb, const char *format, ...) {
   printf("\x1b[38;2;%d;%d;%dm", rgb.r, rgb.g, rgb.b);

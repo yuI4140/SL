@@ -1,3 +1,4 @@
+#pragma once
 #include "core.h"
 int toInt(char *string) {
   errno = 0;

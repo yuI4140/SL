@@ -1,3 +1,4 @@
+#pragma once
 #include "core.h"
 char *substr(char *src, int start, int end) {
   int len = strlen(src);
