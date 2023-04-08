@@ -1,7 +1,5 @@
 #pragma once
-#include <stdlib.h>
-#include <string.h>
-
+#include "core.h"
 typedef struct{
     size_t size;
     void* data;
