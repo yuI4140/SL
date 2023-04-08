@@ -1,5 +1,7 @@
 #pragma once
+#define COLORS
 #include "core.h"
+#include "color.c"
 void cPrint(Rgb rgb, const char *format, ...) {
   printf("\x1b[38;2;%d;%d;%dm", rgb.r, rgb.g, rgb.b);
 

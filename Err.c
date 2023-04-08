@@ -1,6 +1,7 @@
 #pragma once
 #define COLORS
 #include "core.h"
+#include "color.c"
 #define MAX_ERROR_MSG_LENGTH 0x100
 void exception(const char *msg, ...) {
   va_list argp;

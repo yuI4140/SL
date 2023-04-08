@@ -1,6 +1,5 @@
 #pragma once
 #include "defines.h"
-#include "Color.c"
 #include <stdarg.h>
 #include <stdlib.h>
 #include<math.h>
