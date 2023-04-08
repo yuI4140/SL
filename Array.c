@@ -1,3 +1,4 @@
+#pragma once
 #include <stdlib.h>
 #include <string.h>
 
@@ -7,7 +8,7 @@ typedef struct {
     void** data;
 } Array;
 
-Array createArray(size_t capacity) {
+Array create_a(size_t capacity) {
     Array array;
     array.size = 0;
     array.capacity = capacity;
@@ -15,14 +16,14 @@ Array createArray(size_t capacity) {
     return array;
 }
 
-void freeArray(Array* array) {
+void free_a(Array* array) {
     for (int i = 0; i < array->size; i++) {
         free(array->data[i]);
     }
     free(array->data);
 }
 
-void pushBackArray(Array* array, void* data) {
+void pushBack_a(Array* array, void* data) {
     if (array->size == array->capacity) {
         array->capacity *= 2;
         array->data = (void**) realloc(array->data, array->capacity * sizeof(void*));
@@ -30,11 +31,11 @@ void pushBackArray(Array* array, void* data) {
     array->data[array->size++] = data;
 }
 
-void* getArray(Array array, int index) {
+void* get_a(Array array, int index) {
     return array.data[index];
 }
 
-void setArray(Array* array, int index, void* data) {
+void set_a(Array* array, int index, void* data) {
     free(array->data[index]);
     array->data[index] = data;
 }

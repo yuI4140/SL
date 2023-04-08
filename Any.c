@@ -7,10 +7,10 @@ typedef struct{
     void* data;
 } Any;
 
-Any createAny(size_t size) {
-    Any any;
+Any createAny(void* data,size_t size) {
+Any any;
     any.size = size;
-    any.data = malloc(size);
+    any.data =data;
     return any;
 }
 
