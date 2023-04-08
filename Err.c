@@ -27,6 +27,7 @@ typedef struct {
   char message[MAX_ERROR_MSG_LENGTH];
   Rgb color;
 } defErr;
+typedef void (*ErrorHandler)(Error);
 defErr getDefErr(Rgb color, Error error) {
   char defBuf[MAX_ERROR_MSG_LENGTH];
   sprintf(defBuf, "Error %d: %s\n", error.code, error.message);
@@ -63,7 +64,6 @@ Error make_error(int code, const char *message, const char *file, int line) {
            line);
   return error;
 }
-typedef void (*ErrorHandler)(Error);
 #define CHECK_BODY(condition, body)                                            \
   do {                                                                         \
     if ((condition)) {                                                         \
