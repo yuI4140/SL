@@ -150,7 +150,7 @@ typedef void (*void_func_ptr)(void);
 // Alignment macros
 #define AlignDown(x, alignment) ((x) & ~((alignment)-1))
 #define AlignUp(x, alignment) (((x) + (alignment)-1) & ~((alignment)-1))
-#define Swap(a, b) do { typeof(a) temp = (a); (a) = (b); (b) = temp; } while (0)
+#define Swap(a, b) do { a^=b;b^=a;a^=b;} while (0)
 #endif /*DEF_MATH*/
 
 #ifdef DEF_MEM
