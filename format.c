@@ -38,7 +38,7 @@ void print(const char* format, ...) {
                 void* arg = va_arg(args, void*);
                 insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
             } else {
-                EXCEPTION_MSG("Error: Index out of range\n");
+                EXCEPTION_MSG("Index out of range\n");
             }
         }
         format = newfmt;
