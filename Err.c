@@ -117,3 +117,6 @@ Error make_error(int code, const char *message, const char *file, int line) {
       handle_error(nullptr,MAKE_ERROR(1,"Null pointer"));                       \
     }                                                                          \
   } while (0)
+void EXCEPTION_MSG(cstr message){
+handle_error(NULL,MAKE_ERROR(1,message));
+}

@@ -31,13 +31,14 @@ void print(const char* format, ...) {
     while (*format != '\0') {
         Contains fcb = countAndFind(format, strlen(format), "{", sizeof("{") - 1);
         cstr newfmt = replace("{}", "", format);
+        int newfmt_len = strlen(newfmt);
         for (int i = 0; i < fcb.total; ++i) {
-            if ((intptr_t)fcb.pos[i] < strlen(newfmt)) {
+            if ((intptr_t)fcb.pos[i] < newfmt_len) {
                 fcb.pos[i] = (const void*)((intptr_t)fcb.pos[i] + 1);
                 void* arg = va_arg(args, void*);
                 insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
             } else {
-                exception("Index out of range\n");
+                EXCEPTION_MSG("Error: Index out of range\n");
             }
         }
         format = newfmt;
@@ -45,3 +46,4 @@ void print(const char* format, ...) {
     printf(format);
     va_end(args);
 }
+
