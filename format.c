@@ -27,21 +27,25 @@ void print(const char* format, ...) {
         va_end(args);
         return;
     }
-
-    while (*format != '\0') {
-        Contains fcb = countAndFind(format, strlen(format), "{", sizeof("{") - 1);
-        cstr newfmt = replace("{}", "", format);
+      int total_args = 0;
+    const char* format_ptr = format;
+    while (*format_ptr != '\0') {
+        Contains fcb = countAndFind(format_ptr, strlen(format_ptr), "{", sizeof("{") - 1);
+        cstr newfmt = replace("{}", "", format_ptr);
         int newfmt_len = strlen(newfmt);
         for (int i = 0; i < fcb.total; ++i) {
             if ((intptr_t)fcb.pos[i] < newfmt_len) {
                 fcb.pos[i] = (const void*)((intptr_t)fcb.pos[i] + 1);
-                void* arg = va_arg(args, void*);
-                insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
-            } else {
+                if (total_args > 0) {
+                    void* arg = va_arg(args, void*);
+                    insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
+                }
+            }else {
                 EXCEPTION_MSG("Index out of range\n");
             }
         }
-        format = newfmt;
+        format_ptr = newfmt;
+        total_args += fcb.total;
     }
     printf(format);
     va_end(args);
