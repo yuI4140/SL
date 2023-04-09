@@ -1,5 +1,49 @@
 #pragma once
 #include "core.h"
+typedef struct {
+    const void** pos;
+    int total;
+} Contains;
+void insert_char(const char* str, int index, void* inst) {
+    if (index < 0 || index > strlen(str)) {
+        printf("Error: Index out of range\n");
+        return;
+    }
+
+    char ch = *(char*)inst;
+
+    int size = strlen(str) + 2;
+    char* new_str = (char*)malloc(size * sizeof(char));
+    if (new_str == NULL) {
+        printf("Error: Memory allocation failed\n");
+        return;
+    }
+
+    strncpy(new_str, str, index);
+    new_str[index] = ch;
+    strcpy(new_str + index + 1, str + index);
+
+    printf("Original string: %s\n", str);
+    printf("String after insertion: %s\n", new_str);
+
+    free(new_str);
+}
+Contains countAndFind(const void* arr, int size, const void* element, size_t elemSize) {
+    Contains result;
+    result.total = 0;
+    result.pos = (const void**) malloc(size * sizeof(const void*));
+
+    for (int i = 0; i < size; i++) {
+        void* temp = malloc(elemSize); 
+        memcpy(temp, (const char*)arr + i * elemSize, elemSize);
+        if (memcmp(temp, element, elemSize) == 0) { 
+            result.pos[result.total++] = (const char*)arr + i * elemSize;
+        }
+        free(temp);
+    }
+
+    return result;
+}
 char *substr(char *src, int start, int end) {
   int len = strlen(src);
   if (end < 0) {
