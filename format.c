@@ -22,13 +22,23 @@ void print(const char* format, ...) {
     va_list args;
     va_start(args, format);
 
+    if (!contains((char*)format, "{}")) {
+        printf(format);
+        va_end(args);
+        return;
+    }
+
     while (*format != '\0') {
         Contains fcb = countAndFind(format, strlen(format), "{", sizeof("{") - 1);
         cstr newfmt = replace("{}", "", format);
         for (int i = 0; i < fcb.total; ++i) {
-            fcb.pos[i] = (const void*)((intptr_t)fcb.pos[i] + 1);
-            void* arg = va_arg(args, void*);
-            insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
+            if ((intptr_t)fcb.pos[i] < strlen(newfmt)) {
+                fcb.pos[i] = (const void*)((intptr_t)fcb.pos[i] + 1);
+                void* arg = va_arg(args, void*);
+                insert_char(newfmt, (int)((intptr_t)fcb.pos[i]), arg);
+            } else {
+                exception("Index out of range\n");
+            }
         }
         format = newfmt;
     }
