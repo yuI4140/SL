@@ -1,31 +1,19 @@
 #pragma once
 #include "core.h"
+#include "Err.c"
 typedef struct {
     const void** pos;
     int total;
 } Contains;
 void insert_char(const char* str, int index, void* inst) {
-    if (index < 0 || index > strlen(str)) {
-        printf("Error: Index out of range\n");
-        return;
-    }
-
+    CHECK_MSG(index < 0 || index > strlen(str),"Index out of range\n");
     char ch = *(char*)inst;
-
     int size = strlen(str) + 2;
     char* new_str = (char*)malloc(size * sizeof(char));
-    if (new_str == NULL) {
-        printf("Error: Memory allocation failed\n");
-        return;
-    }
-
+    CHECK_MSG(new_str == NULL,"Memory allocation failed\n");
     strncpy(new_str, str, index);
     new_str[index] = ch;
     strcpy(new_str + index + 1, str + index);
-
-    printf("Original string: %s\n", str);
-    printf("String after insertion: %s\n", new_str);
-
     free(new_str);
 }
 Contains countAndFind(const void* arr, int size, const void* element, size_t elemSize) {
@@ -41,7 +29,6 @@ Contains countAndFind(const void* arr, int size, const void* element, size_t ele
         }
         free(temp);
     }
-
     return result;
 }
 char *substr(char *src, int start, int end) {

@@ -32,6 +32,6 @@ void print(const char* format, ...) {
         }
         format = newfmt;
     }
-    printf("%s",format);
+    printf(format);
     va_end(args);
 }
