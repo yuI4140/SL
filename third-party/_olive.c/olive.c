@@ -11,7 +11,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "../defines.h"
 #ifndef OLIVECDEF
 #define OLIVECDEF static inline
 #endif

@@ -155,6 +155,28 @@ typedef void (*void_func_ptr)(void);
 
 #ifdef DEF_MEM
 #include "Err.c"
+#define Sawp_s(a, b, size) do { \
+    if ((a) != NULL && (b) != NULL && (a) != (b)) { \
+        if ((size) > 0) { \
+            union { \
+                char c[size]; \
+                short s[size / sizeof(short)]; \
+                int i[size / sizeof(int)]; \
+                long l[size / sizeof(long)]; \
+                float f[size / sizeof(float)]; \
+                double d[size / sizeof(double)]; \
+                char* cp[size / sizeof(char*)]; \
+                const char* ccp[size / sizeof(const char*)]; \
+                wchar_t wc[size / sizeof(wchar_t)]; \
+                unsigned long long ull[size / sizeof(unsigned long long)]; \
+                /* Add additional data types as needed */ \
+            } u; \
+            memcpy(&u, (a), (size)); \
+            memcpy((a), (b), (size)); \
+            memcpy((b), &u, (size)); \
+        } \
+    } \
+} while (0)
 #define defmemcpy(dest, src, n) \
 do { \
     CHECK_MSG(dest == nullptr || src == NULL,"Null pointer detected"); \
