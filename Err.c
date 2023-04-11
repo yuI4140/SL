@@ -1,6 +1,6 @@
 #pragma once
-#define COLORS
 #include "core.h"
+#define COLORS
 #include "color.c"
 #define MAX_ERROR_MSG_LENGTH 0x100
 void exception(const char *msg, ...) {

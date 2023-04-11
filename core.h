@@ -7,4 +7,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#ifdef CR_THREAD
+#include "thread.c"
+#endif
 //CORE.H
