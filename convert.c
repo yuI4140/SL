@@ -1,4 +1,5 @@
 #pragma once
+#define NORMAL
 #include "core.h"
 int toInt(char *string) {
   errno = 0;

@@ -1,5 +1,8 @@
 #pragma once
-#include "core.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 #define COLORS
 #include "color.c"
 #define MAX_ERROR_MSG_LENGTH 0x100
