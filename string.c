@@ -1,4 +1,5 @@
 #pragma once
+#define DEF
 #include "core.h"
 #include "Err.c"
 typedef struct {

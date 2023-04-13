@@ -89,6 +89,14 @@ typedef void (*void_func_ptr)(void);
 #define AlignDown(x, alignment) ((x) & ~((alignment)-1))
 #define AlignUp(x, alignment) (((x) + (alignment)-1) & ~((alignment)-1))
 #define Swap(a, b) do { a^=b;b^=a;a^=b;} while (0)
+// OffsetOf macro to get the offset of a member in a struct
+#define OffsetOf(type, member) ((size_t)(&((type*)0)->member))
+// ContainerOf macro to get the pointer to the parent struct from a member
+#define ContainerOf(ptr, type, member) ((type*)((char*)(ptr) - OffsetOf(type, member)))
+#define MemoryCopy(d,s,z) memmove((d), (s), (z))
+#define MemoryCopyStruct(d,s) MemoryCopy((d),(s), Min(sizeof(*(d)) , sizeof(*(s))))
+#define MemoryZero(d,z) memset((d), 0, (z))
+#define MemoryZeroStruct(d,s) MemoryZero((d),sizeof(s))
 #endif /*DEF_MATH*/
 
 #ifdef DEF_MEM
@@ -135,14 +143,6 @@ do { \
     CHECK_MSG(n == 0,"Invalid argument"); \
     memset(ptr, value, n); \
 } while(0)
-// OffsetOf macro to get the offset of a member in a struct
-#define OffsetOf(type, member) ((size_t)(&((type*)0)->member))
-// ContainerOf macro to get the pointer to the parent struct from a member
-#define ContainerOf(ptr, type, member) ((type*)((char*)(ptr) - OffsetOf(type, member)))
-#define MemoryCopy(d,s,z) memmove((d), (s), (z))
-#define MemoryCopyStruct(d,s) MemoryCopy((d),(s), Min(sizeof(*(d)) , sizeof(*(s))))
-#define MemoryZero(d,z) memset((d), 0, (z))
-#define MemoryZeroStruct(d,s) MemoryZero((d),sizeof(s))
 #endif /*DEF_MEM*/
 
 #ifdef DEF_BIT

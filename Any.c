@@ -1,4 +1,5 @@
 #pragma once
+#define NORMAL
 #include "core.h"
 typedef struct{
     size_t size;

@@ -1,4 +1,6 @@
 #pragma once
+#define DEF
+#define NORMAL
 #include "core.h"
 typedef struct {
   FILE *file;
