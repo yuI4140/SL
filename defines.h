@@ -54,22 +54,6 @@ typedef void (*void_func_ptr)(void);
 
 #ifdef DEF_MATH
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
-#include <time.h>
-#define GetRand(start, end) ({ \
-    int range = (end) - (start) + 1; \
-    int pseudonymIndices[range]; \
-    for (int i = 0; i < range; i++) { \
-        pseudonymIndices[i] = (start) + i; \
-    } \
-    srand(time(0)); \
-    for (int i = range - 1; i > 0; i--) { \
-        int j = rand() % (i + 1); \
-        int temp = pseudonymIndices[i]; \
-        pseudonymIndices[i] = pseudonymIndices[j]; \
-        pseudonymIndices[j] = temp; \
-    } \
-    pseudonymIndices[0]; \
-})
 #define RoundUp(value, alignment) (((value) + (alignment) - 1) & ~((alignment) - 1))
 // RoundDown macro to round a value down to the nearest multiple of a specified alignment
 #define RoundDown(value, alignment) ((value) & ~((alignment) - 1))
