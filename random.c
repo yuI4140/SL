@@ -12,7 +12,7 @@ void fisher_yates_shuffle(i32 *arr, i32 n) {
   }
 }
 
-i32 getRandom(i32 start, i32 end) {
+i32 getRand(i32 start, i32 end) {
   static i32 num_array[100];
   static b8 initialized = false;
 

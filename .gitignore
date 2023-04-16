@@ -1,7 +1,9 @@
 # Prerequisites
 *.d
+# folders & subExtensions
 .vscode/
 tests/
+*.exe.old
 # Object files
 *.o
 *.ko

@@ -2,24 +2,19 @@
 #define DEF
 #define NORMAL
 #include "core.h"
+str fsName;
 typedef struct {
   FILE *file;
   long sz;
 } Fs;
-
-Fs createFs(const char *filename) {
-  Fs fs;
-  fs.file = fopen(filename, "r+");
-  fseek(fs.file, 0, SEEK_END);
-  fs.sz = ftell(fs.file);
-  fseek(fs.file, 0, SEEK_SET);
-  return fs;
-}
-Fs FromFs(FILE *fs) {
-  long sz = ftell(fs);
-  Fs fs2 = {fs, sz};
+Fs newFs(cstr filename) {
+  FILE *file = fopen(filename, "r+");
+  fsName = filename;
+  long sz = ftell(file);
+  Fs fs2 = {file, sz};
   return fs2;
 }
+str getName() { return fsName; }
 void freeFs(Fs *fs) { fclose(fs->file); }
 
 long fileSize(Fs fs) {
@@ -27,79 +22,53 @@ long fileSize(Fs fs) {
   fs.sz = size;
   return fs.sz;
 }
-
-void readFromFile(Fs fs, long offset, void *data, long size) {
-  fseek(fs.file, offset, SEEK_SET);
-  fread(data, size, 1, fs.file);
-}
-
-void writeToFile(Fs fs, const char *data) { fputs(data, fs.file); }
-void appendToFile(Fs fs, void *data, long size) {
-  fseek(fs.file, 0, SEEK_END);
-  fwrite(data, size, 1, fs.file);
-  fs.sz += size;
-}
-
-void deleteFromFl(Fs fs, long offset, long size) {
-  char *buffer = malloc(fs.sz - size);
-  fseek(fs.file, 0, SEEK_SET);
-  fread(buffer, offset, 1, fs.file);
-  fseek(fs.file, offset + size, SEEK_SET);
-  fread(buffer + offset, fs.sz - offset - size, 1, fs.file);
-  fseek(fs.file, 0, SEEK_SET);
-  fwrite(buffer, fs.sz - size, 1, fs.file);
-  fs.sz -= size;
-  free(buffer);
-}
-
-void truncateFile(Fs fs, long size) {
-  if (size < fs.sz) {
-    fseek(fs.file, size, SEEK_SET);
-    ftruncate(fileno(fs.file), size);
-    fs.sz = size;
-  }
-}
-
-void copyFile(const char *src, const char *dest) {
-  FILE *srcFile = fopen(src, "rb");
-  fseek(srcFile, 0, SEEK_END);
-  long sz = ftell(srcFile);
-  fseek(srcFile, 0, SEEK_SET);
-  char *buffer = malloc(sz);
-  fread(buffer, sz, 1, srcFile);
-  fclose(srcFile);
-  FILE *destFile = fopen(dest, "wb");
-  fwrite(buffer, sz, 1, destFile);
-  fclose(destFile);
-  free(buffer);
-}
-void readStringFromFile(Fs fs, long offset, char *str, long size) {
-  fseek(fs.file, offset, SEEK_SET);
-  fread(str, size, 1, fs.file);
-  str[size] = '\0';
-}
-
-void writeStringToFile(Fs fs, long offset, const char *str) {
-  long size = strlen(str);
-  fseek(fs.file, offset, SEEK_SET);
-  fwrite(str, size, 1, fs.file);
-  fs.sz += size - (fs.sz - offset);
-}
-
-void copyStringToFile(Fs fs, const char *str) {
-  long size = strlen(str);
-  fwrite(str, size, 1, fs.file);
-  fs.sz += size;
-}
-void resizeFile(Fs fs, long newSize) {
-  if (newSize == fs.sz) {
+void writeFs(Fs fs, int index, const char *line) {
+  if (fs.file == NULL) {
+    printf("Failed to open file \n");
     return;
   }
-  if (newSize < fs.sz) {
-    ftruncate(fileno(fs.file), newSize);
-  } else {
-    fseek(fs.file, newSize - 1, SEEK_SET);
-    fputc(0, fs.file);
+
+  // Move file pointer to the beginning of the line to be replaced
+  int line_num = 0;
+  char buffer[256];
+  while (fgets(buffer, sizeof(buffer), fs.file) != NULL) {
+    if (line_num == index) {
+      break;
+    }
+    line_num++;
   }
-  fs.sz = newSize;
+
+  // Write the new line to the file at the specified index
+  fseek(fs.file, -strlen(buffer),
+        SEEK_CUR); // Move file pointer back to the start of the line
+  fprintf(fs.file, "%s", line); // Write the new line
+  freeFs(&fs);
+}
+const char *readFs(Fs fs, int index) {
+  if (fs.file == NULL) {
+    printf("Failed to open file\n");
+    return NULL;
+  }
+
+  char buffer[256]; // Buffer to store each line
+  int line_num = 0; // Line number counter
+  while (fgets(buffer, sizeof(buffer), fs.file) != NULL) {
+    if (line_num == index) { // Match line number
+      fclose(fs.file);       // Close file
+      // Remove newline character at the end of the line
+      char *newline = strchr(buffer, '\n');
+      if (newline != NULL) {
+        *newline = '\0';
+      }
+      return strdup(
+          buffer); // Return the line as a dynamically allocated string
+    }
+    line_num++; // Increment line number
+  }
+
+  freeFs(&fs);
+
+  // If line number is out of range, return NULL
+  printf("Line index out of range: %d\n", index);
+  return nullptr;
 }
