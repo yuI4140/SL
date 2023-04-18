@@ -1,3 +1,4 @@
+#pragma once
 #include "mem.c"
 #include <ctype.h>
 typedef struct {

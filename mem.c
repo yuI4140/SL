@@ -1,9 +1,10 @@
+#pragma once
 #define DEF_MATH
 #define DEF
 #define NORMAL
-#include "../core.h"
-#include "../hash.c"
-#include "../random.c"
+#include "core.h"
+#include "hash.c"
+#include "random.c"
 #define H_CAP Gigabytes(1)
 #define CHNK_CAP Kilobytes(7)
 i8 heap[H_CAP] = {0};
