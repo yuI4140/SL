@@ -123,3 +123,10 @@ cstr add_all(str *argv, i32 start_index, b32 add_space) {
 
   return result;
 }
+b8 isPtrInArray(void *ptr, void *arr, size_t arrSize) {
+  if (ptr >= arr && ptr < arr + arrSize) {
+    return true;
+  } else {
+    return false;
+  }
+}
