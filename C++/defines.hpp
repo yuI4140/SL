@@ -31,15 +31,15 @@ using b32 = u32;
 #define cfalse 0
 
 // C-style strings types.
-using str=i8*;
-using cstr=const str;
+using str = i8 *;
+using cstr = const str;
 
 // Void function type.
 typedef void void_func(void);
 typedef void (*void_func_ptr)(void);
 
 // C-style nulls
-#define cNullptr ((void*)0)
+#define cNullptr ((void *)0)
 #define cNull 0
 
 #define WCHAR_MAX 0xffff
@@ -47,6 +47,7 @@ typedef void (*void_func_ptr)(void);
 #define DEPRECATED(msg) [[deprecated(msg)]]
 //-------------------------------------------------
 // macros from defines.h
+// TODO: improve
 //-------------------------------------------------
 
 #ifdef DEF_ARRAY
