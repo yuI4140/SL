@@ -1,42 +1,54 @@
 #pragma once
 // Unsigned int types.
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-typedef unsigned long _u64;
+using u8 = unsigned char;
+using u16 = unsigned short;
+using u32 = unsigned int;
+using u64 = unsigned long long;
+using _u64 = unsigned long;
+
 // Signed int types.
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
-typedef signed long _s64;
+using s8 = signed char;
+using s16 = signed short;
+using s32 = signed int;
+using s64 = signed long long;
+using _s64 = signed long;
+
 // Regular int types.
-typedef char i8;
-typedef short i16;
-typedef int i32;
-typedef long long i64;
-typedef long _i64;
-// Floating point types
-typedef float f32;
-typedef double f64;
-// Boolean types
-typedef u8 b8;
-typedef u32 b32;
-// stirng types
-typedef i8 *str;
-typedef const str cstr;
-// typedef u16 wchar_t;
-//  Void function type
+using i8 = char;
+using i16 = short;
+using i32 = int;
+using i64 = long long;
+using _i64 = long;
+
+// Floating point types.
+using f32 = float;
+using f64 = double;
+
+// Alternative Boolean types.
+using b8 = u8;
+using b32 = u32;
+#define ctrue 1
+#define cfalse 0
+
+// C-style strings types.
+using str=i8*;
+using cstr=const str;
+
+// Void function type.
 typedef void void_func(void);
 typedef void (*void_func_ptr)(void);
-#define true 1
-#define false 0
-#define null 0
+
+// C-style nulls
+#define cNullptr ((void*)0)
+#define cNull 0
+
 #define WCHAR_MAX 0xffff
-#define nullptr ((void *)0)
 #define UNUSED(var) ((void)(var))
-#define DEPRECATED(msg) __attribute__((deprecated(msg)))
+#define DEPRECATED(msg) [[deprecated(msg)]]
+//-------------------------------------------------
+// macros from defines.h
+//-------------------------------------------------
+
 #ifdef DEF_ARRAY
 #define ArrayCount(a) (sizeof(a) / sizeof(a[0]))
 #define Slice_Prototype(type)                                                  \
