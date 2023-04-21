@@ -1,4 +1,6 @@
 # SL 
+**this is a simple version of SL but later will be added the C++ implementation as well.**
+
 **SL is a daily or useful library to save extra development time.**
 
 **Contributions for improvement/new features**: *create a fork and then make a pull request.*
