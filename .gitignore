@@ -2,6 +2,7 @@
 *.d
 # folders & subExtensions
 .vscode/
+.Shared/
 tests/
 *.exe.old
 # Object files

@@ -1,4 +1,3 @@
-#pragma once
 #define NORMAL
 #include "core.h"
 typedef struct{

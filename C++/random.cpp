@@ -1,7 +1,4 @@
-#define NORMAL
-#define DEF
-#define EXTRA
-#include "core.hpp"
+#include "random.hpp"
 void fisher_yates_shuffle(std::vector<int> &arr) {
   std::random_device rd;
   std::mt19937 gen(rd());

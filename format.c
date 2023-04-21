@@ -1,4 +1,3 @@
-#pragma once
 #define COLORS
 #include "core.h"
 #include "color.c"

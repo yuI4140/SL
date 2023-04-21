@@ -1,4 +1,3 @@
-#pragma once
 #define DEF
 #define NORMAL
 #include "core.h"

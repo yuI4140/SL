@@ -1,4 +1,3 @@
-#pragma once
 #define DEF
 #include "Err.c"
 #include "core.h"

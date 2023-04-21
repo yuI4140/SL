@@ -1,4 +1,3 @@
-#pragma once
 #define DEF_MATH
 #define DEF
 #define NORMAL
