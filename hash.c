@@ -1,8 +1,4 @@
-#define DEF
-#define DEF_MATH
-#define NORMAL
-#include "core.h"
-#define HASH_TABLE_SIZE Kilobytes(7)
+#include ".h/hash.h"
 i32 hash(cstr key) {
   const u8 *str = (const u8 *)key;
   u32 hash = 5381;

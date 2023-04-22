@@ -1,7 +1,4 @@
-#define NORMAL
-#define DEF
-#include "core.h"
-typedef struct {size_t size;size_t capacity;void** data;} Array;
+#include ".h/array.h"
 Array create_a(size_t capacity) {
     Array array;
     array.size = 0;
@@ -24,4 +21,11 @@ void* get_a(Array *array, int index) {
 void set_a(Array* array, int index, void* data) {
     array->data[index]=0;
     array->data[index] = data;
+}
+b8 isPtrInArray(void *ptr, void *arr, size_t arrSize) {
+  if (ptr >= arr && ptr < arr + arrSize) {
+    return true;
+  } else {
+    return false;
+  }
 }

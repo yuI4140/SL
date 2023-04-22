@@ -1,6 +1,5 @@
-#define NORMAL
-#include "core.h"
-int toInt(char *string) {
+#include ".h/convert.h"
+int toInt(str string) {
   errno = 0;
   long result = strtol(string, NULL, 10);
   if (errno != 0 || result > INT_MAX || result < INT_MIN) {

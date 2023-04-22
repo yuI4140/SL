@@ -1,17 +1,11 @@
-#define DEF
-#include "Err.c"
-#include "core.h"
-
-typedef struct {
-  const void **pos;
-  int total;
-} Contains;
+#include ".h/string.h"
 void insert_char(const char *str, int index, void *inst) {
-  CHECK_MSG(index < 0 || index > strlen(str), "Index out of range\n");
+  if(index < 0 || index > strlen(str)){printf("Index out of range\n");exit(1);}
   char ch = *(char *)inst;
   int size = strlen(str) + 2;
   char *new_str = (char *)malloc(size * sizeof(char));
-  CHECK_MSG(new_str == NULL, "Memory allocation failed\n");
+  
+  if(new_str == NULL){printf("Memory allocation failed\n");exit(1);};
   strncpy(new_str, str, index);
   new_str[index] = ch;
   strcpy(new_str + index + 1, str + index);
@@ -121,11 +115,4 @@ cstr add_all(str *argv, i32 start_index, b32 add_space) {
   }
 
   return result;
-}
-b8 isPtrInArray(void *ptr, void *arr, size_t arrSize) {
-  if (ptr >= arr && ptr < arr + arrSize) {
-    return true;
-  } else {
-    return false;
-  }
 }

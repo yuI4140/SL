@@ -1,22 +1,7 @@
-#define DEF_MATH
-#define DEF
-#define NORMAL
-#include "core.h"
-#include "hash.c"
-#include "random.c"
-#define H_CAP Gigabytes(1)
-#define CHNK_CAP Kilobytes(7)
+#include ".h/mem.h"
 i8 heap[H_CAP] = {0};
 i8 chunker[CHNK_CAP] = {0};
 size_t chunkerSize, heapSize;
-typedef struct {
-  void *ptr;
-  size_t sz;
-} Chunk;
-typedef struct {
-  void *ptr;
-  size_t sz;
-} Box;
 Chunk chunkAlloc(size_t sz) {
   void *chunk = chunker + sz;
   chunkerSize += sz;

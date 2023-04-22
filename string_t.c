@@ -1,10 +1,4 @@
-#include "mem.c"
-#include <ctype.h>
-typedef struct {
-  void *ptr;
-  size_t sz;
-} string;
-
+#include ".h/string_t.h"
 string newStr(size_t sz) {
   string newstring;
   newstring.ptr = hAlloc(sz);
@@ -82,7 +76,7 @@ void concatenateStr(const string *str1, const string *str2, string *dest) {
 }
 
 // Function to find the index of a substring in a string
-b8 findSubStr(const string *str, const string *sub) {
+size_t findSubStr(const string *str, const string *sub) {
   if (sub->sz == 0) {
     return false;
   }

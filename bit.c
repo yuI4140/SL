@@ -1,7 +1,4 @@
-#define BIT
-#define DEF
-#define NORMAL
-#include "core.h"
+#include ".h/bit.h"
 void FLIP(void *ptr, int times) {
   unsigned long long value = *(unsigned long long *)ptr;
   value = (1 << times) ^ value;
