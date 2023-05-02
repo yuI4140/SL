@@ -27,7 +27,7 @@ void *hAlloc(size_t sz) {
 Chunk hAllocChunk(size_t sz) {
   void *h = heap + sz;
   heapSize += sz;
-  Chunk newBox = {h,sz};
+  Chunk newBox = {h, sz};
   return newBox;
 }
 void passHeap() {

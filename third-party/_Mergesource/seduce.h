@@ -7,7 +7,7 @@ This is the new and improved .h file for the "ui tool kit" used in varius verse 
 
 #include "forge.h"
 #include "betray.h"
-#include "relinquish.h"
+#include "quel_solaar_zip/Relinquish/relinquish.h"
 #include "s_text.h"
 
 /*     Initialize Seduce      */

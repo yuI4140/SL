@@ -5,36 +5,34 @@
 #define COLORS
 #include "Color.c"
 #include "string.c"
-char *RgbToAnsi(Rgb rgb) {
-  int R = rgb.r;
-  int G = rgb.g;
-  int B = rgb.b;
+str RgbToAnsi(Rgb rgb) {
+  i32 R = rgb.r;
+  i32 G = rgb.g;
+  i32 B = rgb.b;
 
-  // Calculate the closest color in the 216-color cube
-  int r = (R * 5 / 255);
-  int g = (G * 5 / 255);
-  int b = (B * 5 / 255);
-  int colorIndex = 16 + (r * 36) + (g * 6) + b;
+  i32 r = (R * 5 / 255);
+  i32 g = (G * 5 / 255);
+  i32 b = (B * 5 / 255);
+  i32 colorIndex = 16 + (r * 36) + (g * 6) + b;
 
-  // Convert the color index to an ANSI escape code
-  char *ansiCode = (char *)malloc(20);
+  str ansiCode = (str)malloc(20);
   sprintf(ansiCode, "\033[38;5;%dm", colorIndex);
 
   return ansiCode;
 }
-void print(const char *format, ...) {
+void print(cstr format, ...) {
   va_list args;
   va_start(args, format);
 
-  char buffer[256];
+  i8 buffer[256];
   vsprintf(buffer, format, args);
 
-  for (int i = 0; buffer[i] != '\0'; i++) {
+  for (i32 i = 0; buffer[i] != '\0'; i++) {
     if (buffer[i] == '%') {
       switch (buffer[i + 1]) {
       case 'r': {
         Rgb rgb = va_arg(args, Rgb);
-        char *ansiCode = RgbToAnsi(rgb);
+        str ansiCode = RgbToAnsi(rgb);
         printf("%s", ansiCode);
         i++;
         break;
@@ -51,7 +49,8 @@ void print(const char *format, ...) {
 
   va_end(args);
 }
-str format(const char *format, ...) {
+// not stable yet
+str format(cstr format, ...) {
   va_list args;
   va_start(args, format);
 
