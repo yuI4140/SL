@@ -1,17 +1,17 @@
 #include ".h/convert.h"
-int toInt(str string) {
+i32 toInt(str string) {
   errno = 0;
-  long result = strtol(string, NULL, 10);
+  _i64 result = strtol(string, NULL, 10);
   if (errno != 0 || result > INT_MAX || result < INT_MIN) {
-    fprintf(stderr, "Error converting string '%s' to integer\n",string);
+    fprintf(stderr, "Error converting string '%s' to integer\n", string);
     exit(EXIT_FAILURE);
   }
-  return (int)result;
+  return (i32)result;
 }
-float toFloat(char *str) {
+f32 toFloat(str str) {
   errno = 0;
-  char *endptr;
-  float result = strtof(str, &endptr);
+  str endptr;
+  f32 result = strtof(str, &endptr);
   if (errno != 0 || *endptr != '\0') {
     fprintf(stderr, "Error converting string '%s' to float\n", str);
     exit(EXIT_FAILURE);
@@ -19,7 +19,7 @@ float toFloat(char *str) {
   return result;
 }
 
-double toDouble(char *str) {
+f64 toDouble(str str) {
   errno = 0;
   char *endptr;
   double result = strtod(str, &endptr);

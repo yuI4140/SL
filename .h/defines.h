@@ -77,6 +77,7 @@ typedef void (*void_func_ptr)(void);
 // Alignment macros
 #define AlignDown(x, alignment) ((x) & ~((alignment)-1))
 #define AlignUp(x, alignment) (((x) + (alignment)-1) & ~((alignment)-1))
+// only it support numerical types
 #define Swap(a, b)                                                             \
   do {                                                                         \
     a ^= b;                                                                    \
