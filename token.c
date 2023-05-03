@@ -1,12 +1,13 @@
 #define DEF
 #define NORMAL
 #include ".h/core.h"
+#include "Err.c"
 typedef struct {
   i8 set[2];
   size_t sz;
 } Token;
 // Initialize a Token with a given character set
-void initTkn(Token *token, const char *set) {
+vd initTkn(Token *token, i8 set[2]) {
   strncpy(token->set, set, 2);
   token->sz = strlen(set);
 }
