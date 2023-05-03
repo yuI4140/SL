@@ -1,7 +1,6 @@
 #define DEF
 #define NORMAL
 #include ".h/core.h"
-#include "Err.c"
 typedef struct {
   i8 set[2];
   size_t sz;
