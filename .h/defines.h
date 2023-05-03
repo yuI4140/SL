@@ -24,10 +24,12 @@ typedef double f64;
 typedef u8 b8;
 typedef u32 b32;
 // stirng types
+// char*
 typedef i8 *str;
+// const char*
 typedef const str cstr;
-// typedef u16 wchar_t;
-//  Void function type
+// void
+typedef void vd;
 typedef void void_func(void);
 typedef void (*void_func_ptr)(void);
 #define true 1
@@ -55,7 +57,17 @@ typedef void (*void_func_ptr)(void);
 #define Stringify(x) #x
 #define StringifyMacro(x) Stringify(x)
 #endif /*DEF_STR*/
+#ifdef DEF_DIR
+#include <dirent.h>
+#include <stdio.h>
 
+// DIr pointer
+typedef DIR *Drp;
+// file pointer
+typedef FILE *Fsp;
+// dir entity pointer
+typedef struct dirent *Drep;
+#endif
 #ifdef DEF_MATH
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 #define RoundUp(value, alignment) (((value) + (alignment)-1) & ~((alignment)-1))
