@@ -1,26 +1,26 @@
 #include ".h/array.h"
+#include <stdio.h>
+static vd *daAllocPtr;
 Array create_a(size_t capacity) {
-    Array array;
-    array.size = 0;
-    array.capacity = capacity;
-    array.data =nullptr;
-    return array;
+  Array array;
+  array.size = 0;
+  array.capacity = capacity;
+  array.data = nullptr;
+  return array;
 }
-void pushBack_a(Array* array, void* data) {
-    if (array->size == array->capacity) {
-        array->capacity *= 2;
-        array->data =data;
-    }
-    array->data[array->size++] = data;
-}
-
-void* get_a(Array *array, int index) {
-    return array->data[index];
+void pushBack_a(Array *array, void *data) {
+  if (array->size == array->capacity) {
+    array->capacity *= 2;
+    array->data = data;
+  }
+  array->data[array->size++] = data;
 }
 
-void set_a(Array* array, int index, void* data) {
-    array->data[index]=0;
-    array->data[index] = data;
+void *get_a(Array *array, int index) { return array->data[index]; }
+
+void set_a(Array *array, int index, void *data) {
+  array->data[index] = 0;
+  array->data[index] = data;
 }
 b8 isPtrInArray(void *ptr, void *arr, size_t arrSize) {
   if (ptr >= arr && ptr < arr + arrSize) {
@@ -28,4 +28,30 @@ b8 isPtrInArray(void *ptr, void *arr, size_t arrSize) {
   } else {
     return false;
   }
+}
+dArray aAlloc(size_t capacity) {
+  size_t rCap = sizeof(dArray) + capacity;
+  dArray array;
+  void *alloc = hAlloc(rCap);
+  daAllocPtr = alloc;
+  array.capacity = rCap;
+  array.size = null;
+  array.data = nullptr;
+  return array;
+}
+void pushBack_da(dArray *array, void *data) {
+  if (sizeof(data) > array->capacity) {
+    printf("ERROR: dArray capacity overloaded\n");
+    exit(1);
+  }
+  if (array->size == array->capacity) {
+    array->capacity *= 2;
+    array->data = data;
+  }
+  array->data[array->size++] = data;
+}
+void *get_da(dArray *array, int index) { return array->data[index]; }
+void set_da(dArray *array, int index, void *data) {
+  array->data[index] = 0;
+  array->data[index] = data;
 }

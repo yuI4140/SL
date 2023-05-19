@@ -1,4 +1,7 @@
 #include ".h/convert.h"
+#include <errno.h>
+#include <limits.h>
+
 i32 toInt(str string) {
   errno = 0;
   _i64 result = strtol(string, NULL, 10);
@@ -10,7 +13,7 @@ i32 toInt(str string) {
 }
 f32 toFloat(str str) {
   errno = 0;
-  str endptr;
+  str endPtr;
   f32 result = strtof(str, &endptr);
   if (errno != 0 || *endptr != '\0') {
     fprintf(stderr, "Error converting string '%s' to float\n", str);
