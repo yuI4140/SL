@@ -1,6 +1,6 @@
 #include ".h/hash.h"
 typedef struct {
-  cstr key;
+  str key;
   vd *value;
 } Entry;
 Entry hashTable[HASH_TABLE_SIZE];
