@@ -30,8 +30,10 @@ typedef i8 *str;
 typedef const str cstr;
 // void
 typedef void vd;
-typedef void void_func(void);
-typedef void (*void_func_ptr)(void);
+// void Func
+typedef void vFn(void);
+// void Func pointer
+typedef void (*vFnp)(void);
 #define true 1
 #define false 0
 #define null 0
@@ -40,7 +42,6 @@ typedef void (*void_func_ptr)(void);
 #define UNUSED(var) ((void)(var))
 #define DEPRECATED(msg) __attribute__((deprecated(msg)))
 #ifdef DEF_ARRAY
-#define ArrayCount(a) (sizeof(a) / sizeof(a[0]))
 #define Slice_Prototype(type)                                                  \
   typedef struct type##_slice {                                                \
     type *elems;                                                               \
