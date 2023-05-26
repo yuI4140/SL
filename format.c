@@ -78,3 +78,27 @@ str format(cstr format, ...) {
   return cbuffer;
   va_end(args);
 }
+void input(char *buffer, int size) {
+  if (size <= 0) {
+    printf("Invalid size.\n");
+    return; // Invalid size, print error message and return
+  }
+
+  if (fgets(buffer, size, stdin) != NULL) {
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n') {
+      buffer[len - 1] = '\0'; // Remove trailing newline
+      len--;
+    }
+
+    if (len == size - 1 && buffer[len] != '\0' && buffer[len] != '\n') {
+      int c;
+      while ((c = getchar()) != '\n' && c != EOF) {
+      }
+    }
+
+    printf("Input received successfully.\n");
+  } else {
+    printf("Error in input.\n");
+  }
+}

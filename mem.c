@@ -9,112 +9,140 @@
 #define ALIGNMENT 8
 #define ALIGN_SIZE(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
 #define ALIGN_OFFSET(ptr) (((ptrdiff_t)(ptr)) & (ALIGNMENT - 1))
-#define ALIGN_POINTER(ptr)                                                     \
-  ((void *)(((ptrdiff_t)(ptr) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1)))
-
-#define H_CAP 1000000
-#define CHNK_CAP 1000000
-
-i8 heap[H_CAP] = {0};
-i8 chunker[CHNK_CAP] = {0};
-size_t chunkerSize = 0;
-size_t heapSize = 0;
+#define ALIGN_POINTER(ptr) ((void *)(((ptrdiff_t)(ptr) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1)))
 
 typedef struct {
-  void *ptr;
-  size_t sz;
-} Chunk;
+  i8 *heap;
+  i8 *chunker;
+  size_t chunkerSize;
+  size_t heapSize;
+} Mem;
 
-Chunk chunkAlloc(size_t sz) {
-  void *chunk = chunker + chunkerSize;
-  chunkerSize += sz;
-  Chunk newChunk = {.ptr = chunk, .sz = sz};
+Mem *createMem(size_t heapCapacity, size_t chunkerCapacity) {
+  Mem *mem = malloc(sizeof(Mem));
+  if (mem == NULL) {
+    return NULL;
+  }
+  
+  mem->heap = malloc(heapCapacity * sizeof(i8));
+  if (mem->heap == NULL) {
+    free(mem);
+    return NULL;
+  }
+  
+  mem->chunker = malloc(chunkerCapacity * sizeof(i8));
+  if (mem->chunker == NULL) {
+    free(mem->heap);
+    free(mem);
+    return NULL;
+  }
+  
+  mem->chunkerSize = 0;
+  mem->heapSize = 0;
+  
+  return mem;
+}
+
+void destroyMem(Mem *mem) {
+  free(mem->chunker);
+  free(mem->heap);
+  free(mem);
+}
+
+Chunk chunkAlloc(Mem *mem, size_t size) {
+  void *chunk = mem->chunker + mem->chunkerSize;
+  mem->chunkerSize += size;
+  Chunk newChunk = {.ptr = chunk, .sz = size};
   return newChunk;
 }
 
-void *hAlloc(size_t sz) {
-  if (heapSize + sz > H_CAP) {
+void *hAlloc(Mem *mem, size_t size) {
+  if (mem->heapSize + size > H_CAP) {
     return NULL; // Memory allocation failed
   }
-  void *h = heap + heapSize;
-  heapSize += sz;
+  
+  void *h = mem->heap + mem->heapSize;
+  mem->heapSize += size;
   return h;
 }
 
-void passHeap() {
-  memcpy(heap, chunker, chunkerSize);
-  heapSize = chunkerSize;
-  chunkerSize = 0;
+void passHeap(Mem *mem) {
+  memcpy(mem->heap, mem->chunker, mem->chunkerSize);
+  mem->heapSize = mem->chunkerSize;
+  mem->chunkerSize = 0;
 }
 
-void bringDown() { memset(chunker, 0, chunkerSize); }
-
-void hFree(void *ptr, size_t sz) {
-  memset(ptr, 0, sz);
-  heapSize -= sz;
+void bringDown(Mem *mem) {
+  memset(mem->chunker, 0, mem->chunkerSize);
 }
 
-void *hReAlloc(void *ptr, size_t oldSz, size_t newSz) {
-  if (newSz <= oldSz) {
+void hFree(Mem *mem, void *ptr, size_t size) {
+  memset(ptr, 0, size);
+  mem->heapSize -= size;
+}
+
+void *hReAlloc(Mem *mem, void *ptr, size_t oldSize, size_t newSize) {
+  if (newSize <= oldSize) {
     return ptr;
   }
 
-  void *newPtr = hAlloc(newSz);
+  void *newPtr = hAlloc(mem, newSize);
   if (newPtr != NULL) {
-    memcpy(newPtr, ptr, oldSz);
-    hFree(ptr, oldSz);
+    memcpy(newPtr, ptr, oldSize);
+    hFree(mem, ptr, oldSize);
   }
   return newPtr;
 }
 
-size_t hSize(void *ptr) {
-  if (ptr >= heap && ptr < heap + H_CAP) {
-    size_t index = (i8 *)ptr - heap;
-    size_t sz = 0;
+size_t hSize(Mem *mem, void *ptr) {
+  if (ptr >= mem->heap && ptr < mem->heap + H_CAP) {
+    size_t index = (i8 *)ptr - mem->heap;
+    size_t size = 0;
 
-    for (size_t i = index; i < heapSize; ++i) {
-      if (heap[i] == 0) {
-        sz = i - index;
+    for (size_t i = index; i < mem->heapSize; ++i) {
+      if (mem->heap[i] == 0) {
+        size = i - index;
         break;
       }
     }
 
-    if (sz == 0) {
-      sz = heapSize - index;
+    if (size == 0) {
+      size = mem->heapSize - index;
     }
 
-    return sz;
-  } else if (ptr >= chunker && ptr < chunker + CHNK_CAP) {
-    size_t index = (i8 *)ptr - chunker;
-    size_t sz = 0;
+    return size;
+  } else if (ptr >= mem->chunker && ptr < mem->chunker + CHNK_CAP) {
+    size_t index = (i8 *)ptr - mem->chunker;
+    size_t size = 0;
 
-    for (size_t i = index; i < chunkerSize; ++i) {
-      if (chunker[i] == 0) {
-        sz = i - index;
+    for (size_t i = index; i < mem->chunkerSize; ++i) {
+      if (mem->chunker[i] == 0) {
+        size = i - index;
         break;
       }
     }
 
-    if (sz == 0) {
-      sz = chunkerSize - index;
+    if (size == 0) {
+      size = mem->chunkerSize - index;
     }
 
-    return sz;
+    return size;
   } else {
     return 0;
   }
 }
-void *moveToChunk(void *ptr) {
+
+void *moveToChunk(Mem *mem, void *ptr) {
   ptrdiff_t offset = ALIGN_OFFSET(ptr);
   void *alignedPtr = ALIGN_POINTER(ptr);
-  size_t alignedSz = hSize(ptr);
+  size_t alignedSize = hSize(mem, ptr);
 
-  for (size_t i = 0; i < heapSize; i += alignedSz) {
-    if (heap + i == alignedPtr) {
-      Chunk newChunk = chunkAlloc(alignedSz);
-      memcpy(newChunk.ptr, alignedPtr, alignedSz);
-      memset(alignedPtr, 0, alignedSz);
-      heapSize -= alignedSz;
+  for (size_t i = 0; i < mem->heapSize; i += alignedSize) {
+    if (mem->heap + i == alignedPtr) {
+      Chunk newChunk = chunkAlloc(mem, alignedSize);
+      memcpy(newChunk.ptr, alignedPtr, alignedSize);
+      memset(alignedPtr, 0, alignedSize);
+      mem->heapSize -= alignedSize;
       return newChunk.ptr + offset;
     }
   }
@@ -122,21 +150,25 @@ void *moveToChunk(void *ptr) {
   return NULL;
 }
 
-void *hCalloc(size_t count, size_t size) {
+void *hCalloc(Mem *mem, size_t count, size_t size) {
   size_t totalSize = count * size;
-  void *ptr = hAlloc(totalSize);
+  void *ptr = hAlloc(mem, totalSize);
   if (ptr != NULL) {
     memset(ptr, 0, totalSize);
   }
   return ptr;
 }
 
-size_t hAvailable() { return H_CAP - heapSize; }
+size_t hAvailable(Mem *mem) {
+  return H_CAP - mem->heapSize;
+}
 
-size_t hChunkAvailable() { return CHNK_CAP - chunkerSize; }
+size_t hChunkAvailable(Mem *mem) {
+  return CHNK_CAP - mem->chunkerSize;
+}
 
-void *hMalloc(size_t sz) {
-  void *ptr = hAlloc(sz);
+void *hMalloc(Mem *mem, size_t size) {
+  void *ptr = hAlloc(mem, size);
   if (ptr == NULL) {
     // Handle memory allocation error
     // You can add your own error handling logic here
@@ -150,8 +182,8 @@ void hAbort() {
   exit(EXIT_FAILURE);
 }
 
-void *hRealloc(void *ptr, size_t sz) {
-  void *newPtr = hReAlloc(ptr, hSize(ptr), sz);
+void *hRealloc(Mem *mem, void *ptr, size_t size) {
+  void *newPtr = hReAlloc(mem, ptr, hSize(mem, ptr), size);
   if (newPtr == NULL) {
     // Handle memory reallocation error
     // You can add your own error handling logic here
@@ -159,154 +191,16 @@ void *hRealloc(void *ptr, size_t sz) {
   return newPtr;
 }
 
-void h_Free(void *ptr) {
-  size_t sz = hSize(ptr);
-  hFree(ptr, sz);
+void hFree(Mem *mem, void *ptr) {
+  size_t size = hSize(mem, ptr);
+  hFree(mem, ptr, size);
 }
 
-void *hAlignedAlloc(size_t alignment, size_t size) {
-  void *ptr = hAlloc(size + alignment - 1);
-  if (ptr == NULL) {
-    // Handle memory allocation error
-    // You can add your own error handling logic here
-    return NULL;
+void *hAlignedAlloc(Mem *mem, size_t size) {
+  size_t alignedSize = ALIGN_SIZE(size);
+  void *ptr = hAlloc(mem, alignedSize);
+  if (ptr != NULL) {
+    memset(ptr, 0, alignedSize);
   }
-  void *alignedPtr = ALIGN_POINTER(ptr);
-  ptrdiff_t offset = ALIGN_OFFSET(alignedPtr);
-  if (offset != 0) {
-    // Adjust aligned pointer forward
-    alignedPtr = (void *)((i8 *)alignedPtr + alignment - offset);
-  }
-  return alignedPtr;
-}
-
-void *hAlignedRealloc(void *ptr, size_t alignment, size_t size) {
-  void *newPtr = hReAlloc(ptr, hSize(ptr), size + alignment - 1);
-  if (newPtr == NULL) {
-    // Handle memory reallocation error
-    // You can add your own error handling logic here
-    return NULL;
-  }
-  void *alignedPtr = ALIGN_POINTER(newPtr);
-  ptrdiff_t offset = ALIGN_OFFSET(alignedPtr);
-  if (offset != 0) {
-    // Adjust aligned pointer forward
-    alignedPtr = (void *)((i8 *)alignedPtr + alignment - offset);
-  }
-  return alignedPtr;
-}
-
-void hAlignedFree(void *ptr) { hFree(ptr, hSize(ptr)); }
-
-size_t hAlignedSize(void *ptr) {
-  size_t size = hSize(ptr);
-  ptrdiff_t offset = ALIGN_OFFSET(ptr);
-  return size - offset;
-}
-
-void *hMemdup(const void *src, size_t sz) {
-  void *dst = hAlloc(sz);
-  if (dst != NULL) {
-    memcpy(dst, src, sz);
-  }
-  return dst;
-}
-
-void hMemswap(void *ptr1, void *ptr2, size_t sz) {
-  void *tmp = hAlloc(sz);
-  if (tmp != NULL) {
-    memcpy(tmp, ptr1, sz);
-    memcpy(ptr1, ptr2, sz);
-    memcpy(ptr2, tmp, sz);
-    hFree(tmp, sz);
-  }
-}
-
-void *hMemmove(void *dst, const void *src, size_t sz) {
-  void *tmp = hMemdup(src, sz);
-  if (tmp != NULL) {
-    memcpy(dst, tmp, sz);
-    hFree(tmp, sz);
-  }
-  return dst;
-}
-
-int hMemcmp(const void *ptr1, const void *ptr2, size_t sz) {
-  return memcmp(ptr1, ptr2, sz);
-}
-
-void hMemset(void *ptr, int value, size_t sz) { memset(ptr, value, sz); }
-
-void hMemcpy(void *dst, const void *src, size_t sz) { memcpy(dst, src, sz); }
-
-void hMemclr(void *ptr, size_t sz) { memset(ptr, 0, sz); }
-
-void *hMemchr(const void *ptr, int value, size_t sz) {
-  return memchr(ptr, value, sz);
-}
-
-void *hMemrchr(const void *ptr, int value, size_t sz) {
-  const unsigned char *p = (const unsigned char *)ptr;
-  for (size_t i = sz; i > 0; --i) {
-    if (p[i - 1] == (unsigned char)value) {
-      return (void *)(p + i - 1);
-    }
-  }
-  return NULL;
-}
-
-int hMemcasecmp(const void *ptr1, const void *ptr2, size_t sz) {
-  const unsigned char *p1 = (const unsigned char *)ptr1;
-  const unsigned char *p2 = (const unsigned char *)ptr2;
-  for (size_t i = 0; i < sz; ++i) {
-    int diff = tolower(p1[i]) - tolower(p2[i]);
-    if (diff != 0) {
-      return diff;
-    }
-  }
-  return 0;
-}
-
-void *hMemmem(const void *haystack, size_t haystack_sz, const void *needle,
-              size_t needle_sz) {
-  const unsigned char *h = (const unsigned char *)haystack;
-  const unsigned char *n = (const unsigned char *)needle;
-  if (needle_sz == 0) {
-    return (void *)haystack; // Match empty needle
-  }
-  if (needle_sz > haystack_sz) {
-    return NULL; // Needle is longer than haystack, no match
-  }
-  const unsigned char first = *n;
-  const unsigned char *end = h + haystack_sz - needle_sz + 1;
-  for (; h < end; ++h) {
-    if (*h == first && memcmp(h, n, needle_sz) == 0) {
-      return (void *)h;
-    }
-  }
-  return NULL; // No match found
-}
-
-void hMemswapRange(void *ptr1, void *ptr2, size_t sz) {
-  size_t numChunks = sz / sizeof(size_t);
-  size_t *p1 = (size_t *)ptr1;
-  size_t *p2 = (size_t *)ptr2;
-  for (size_t i = 0; i < numChunks; ++i) {
-    size_t tmp = p1[i];
-    p1[i] = p2[i];
-    p2[i] = tmp;
-  }
-}
-
-void hReverseBytes(void *ptr, size_t sz) {
-  unsigned char *p = (unsigned char *)ptr;
-  size_t i = 0;
-  size_t j = sz - 1;
-  while (i < j) {
-    unsigned char tmp = p[i];
-    p[i] = p[j];
-    p[j] = tmp;
-    ++i;
-    --j;
-  }
+  return ptr;
 }
