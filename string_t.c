@@ -1,17 +1,14 @@
 #include ".h/string_t.h"
+#define MEM_IMP
+#include "mem.h"
 string newStr(size_t sz) {
   string newstring;
-  newstring.ptr = hAlloc(sz);
+  newstring.ptr = wMalloc(sz);
   newstring.sz = sz;
   return newstring;
 }
-string newStrView(size_t sz) {
-  Chunk newChunk = chunkAlloc(sz);
-  string newStr = {.ptr = newChunk.ptr, .sz = newChunk.sz};
-  return newStr;
-}
 void freeStr(string *str) {
-  hFree(str->ptr, str->sz);
+  wFree(str->ptr);
   str->ptr = null;
   str->sz = 0;
 }
@@ -60,9 +57,9 @@ b8 hasNullTerm(const string *str) {
 }
 void appendStr(string *str, char c) {
   if (str->sz > 0) {
-    str->ptr = hReAlloc(str->ptr, str->sz, str->sz + 1);
+    str->ptr = wRealloc(str->ptr,str->sz);
   } else {
-    str->ptr = hAlloc(1);
+    str->ptr = wMalloc(1);
   }
   ((char *)str->ptr)[str->sz++] = c;
 }
@@ -70,7 +67,7 @@ void appendStr(string *str, char c) {
 // Function to concatenate two strings
 void concatenateStr(const string *str1, const string *str2, string *dest) {
   size_t totalSz = str1->sz + str2->sz;
-  dest->ptr = hReAlloc(dest->ptr, str1->sz, totalSz);
+  dest->ptr = wRealloc(dest->ptr, str1->sz);
   memcpy((char *)dest->ptr + str1->sz, str2->ptr, str2->sz);
   dest->sz = totalSz;
 }
@@ -128,7 +125,7 @@ void replace(string *str, const string *oldSub, const string *newSub) {
       // If the lengths of oldSub and newSub are different, adjust the size of
       // the string
       size_t newSize = str->sz + newSubLen - oldSubLen;
-      str->ptr = hReAlloc(str->ptr, str->sz, newSize);
+      str->ptr = wRealloc(str->ptr,newSize);
       str->sz = newSize;
     }
   }

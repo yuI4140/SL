@@ -1,7 +1,8 @@
 #pragma once
-#include "../mem.c"
-#include "defines.h"
-#include <ctype.h>
+#define NORMAL
+#define DEF
+#include "core.h"
+#include <ctype.h>
 typedef struct {
   void *ptr;
   size_t sz;
