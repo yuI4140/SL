@@ -1,7 +1,16 @@
-#include ".h/convert.h"
 #include <errno.h>
 #include <limits.h>
-
+#define DEF
+#define NORMAL
+#include ".h/core.h"
+i32 toInt(str string);
+f32 toFloat(str str);
+f64 toDouble(str str);
+str intToString(i32 num);
+str floatToString(f32 num);
+str floatToString_s(f32 num,i32 precision);
+str doubleToString(f64 num);
+#ifdef D_CONVERT
 i32 toInt(str string) {
   errno = 0;
   _i64 result = strtol(string, NULL, 10);
@@ -33,7 +42,7 @@ f64 toDouble(str str) {
   return result;
 }
 
-char *intToString(int num) {
+str intToString(int num) {
   char *str = malloc(12 * sizeof(char));
   if (str == NULL) {
     fprintf(stderr, "Error allocating memory\n");
@@ -43,7 +52,7 @@ char *intToString(int num) {
   return str;
 }
 //  you should use floatToString_s if this not work
-char *floatToString(float num) {
+str floatToString(float num) {
   char *str = malloc(32 * sizeof(char));
   if (str == NULL) {
     fprintf(stderr, "Error allocating memory\n");
@@ -52,7 +61,7 @@ char *floatToString(float num) {
   sprintf(str, "%f", num);
   return str;
 }
-char *floatToString_s(float num, int precision) {
+str floatToString_s(float num, int precision) {
   char *str = malloc(64 * sizeof(char));
   if (str == NULL) {
     fprintf(stderr, "Error allocating memory\n");
@@ -61,7 +70,7 @@ char *floatToString_s(float num, int precision) {
   snprintf(str, 64, "%.*g", precision, num);
   return str;
 }
-char *doubleToString(double num) {
+str doubleToString(double num) {
   char *str = malloc(32 * sizeof(char));
   if (str == NULL) {
     fprintf(stderr, "Error allocating memory\n");
@@ -70,3 +79,4 @@ char *doubleToString(double num) {
   sprintf(str, "%lf", num);
   return str;
 }
+#endif /* ifdef D_CONVERT */

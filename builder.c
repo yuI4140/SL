@@ -1,6 +1,8 @@
 #define NOBUILD_IMP
-#include "Err.c"
-#include "string.c"
+#define D_ERR
+#define D_STRING
+#include "Err.h"
+#include "string.h"
 #include "third-party/_nobuild.h/nobuild.h"
 
 i32 main(i32 argc, str *argv) {

@@ -1,4 +1,18 @@
-#include ".h/string.h"
+#define DEF
+#define NORMAL
+#include ".h/core.h"
+typedef struct {
+  const void **pos;
+  int total;
+} Contains;
+void insert_char(const char *str, int index, void *inst);
+Contains countAndFind(const void *arr, int size, const void *element, size_t elemSize);
+str substr(str src, i32 start, i32 end);
+b8 contains(str str1, str str2);
+char *replace(char *oldStr, char *newStr, char *src);
+cstr add_all(str *argv, i32 start_index, b32 add_space);
+b8 isPtrInArray(void *ptr, void *arr, size_t arrSize);
+#ifdef D_STRING
 void insert_char(const char *str, int index, void *inst) {
   if(index < 0 || index > strlen(str)){printf("Index out of range\n");exit(1);}
   char ch = *(char *)inst;
@@ -116,3 +130,4 @@ cstr add_all(str *argv, i32 start_index, b32 add_space) {
 
   return result;
 }
+#endif /* ifdef D_STRING */

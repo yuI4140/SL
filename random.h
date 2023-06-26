@@ -1,4 +1,12 @@
 #include ".h/random.h"
+#include "defines.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+void fisher_yates_shuffle(i32 *arr, i32 n);
+i32 getRand(i32 start, i32 end);
+
+#ifdef D_RANDOM
 void fisher_yates_shuffle(i32 *arr, i32 n) {
   for (int i = n - 1; i > 0; --i) {
     int j = rand() % (i + 1);
@@ -28,3 +36,4 @@ i32 getRand(i32 start, i32 end) {
   index = (index + 1) % 100;
   return result;
 }
+#endif /* ifdef D_RANDOM */

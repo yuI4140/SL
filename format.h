@@ -2,9 +2,19 @@
 #define VARIANTIC
 #define NORMAL
 #include ".h/core.h"
+#define D_COLOR
 #define COLORS
-#include "Color.c"
-#include "string.c"
+#define D_STRING
+#include "Color.h"
+#include "string.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+str RgbToAnsi(Rgb rgb);
+void print(cstr format, ...);
+str format(cstr format, ...);
+void input(char *buffer, int size);
+#ifdef D_FORMAT
 str RgbToAnsi(Rgb rgb) {
   i32 R = rgb.r;
   i32 G = rgb.g;
@@ -19,6 +29,10 @@ str RgbToAnsi(Rgb rgb) {
   sprintf(ansiCode, "\033[38;5;%dm", colorIndex);
 
   return ansiCode;
+}
+// clear color
+void clsColor(){
+printf("%s",ASCII_RESET);
 }
 void print(cstr format, ...) {
   va_list args;
@@ -102,3 +116,4 @@ void input(char *buffer, int size) {
     printf("Error in input.\n");
   }
 }
+#endif /* ifdef D_FORMAT */

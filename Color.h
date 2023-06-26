@@ -1,20 +1,37 @@
-#pragma once
 #define DEF
 #define NORMAL
-#include "core.h"
+#include ".h/core.h"
+#define ASCII_RESET "\033[0m"
 typedef struct {
   i32 r;
   i32 g;
   i32 b;
 } Rgb;
-
 typedef struct {
   str value;
 } Hex;
-
 Rgb newRgb(i32 r,i32 g,i32 b);
 Rgb hexToRgb(Hex hex);
+#ifdef D_COLOR
+Rgb newRgb(int r, int g, int b) {
+  Rgb color = {r, g, b};
+  return color;
+}
+Rgb hexToRgb(Hex hex) {
+  Rgb rgb = {0, 0, 0};
+  if (strlen(hex.value) == 7 && hex.value[0] == '#') {
+    char r_str[3], g_str[3], b_str[3];
+    strncpy(r_str, hex.value + 1, 2);
+    strncpy(g_str, hex.value + 3, 2);
+    strncpy(b_str, hex.value + 5, 2);
+    rgb.r = strtol(r_str, nullptr, 16);
+    rgb.g = strtol(g_str, nullptr, 16);
+    rgb.b = strtol(b_str, nullptr, 16);
+  }
+  return rgb;
+}
 #ifdef COLORS
+#define C_RESET newRgb(0,0,0)
 #define RED newRgb(0xFF, 0, 0)
 #define GREEN newRgb(0, 0xFF, 0)
 #define BLUE newRgb(0, 0, 0xFF)
@@ -76,3 +93,4 @@ Rgb hexToRgb(Hex hex);
 #define GHOSTWHITE newRgb(0xF8, 0xF8, 0xFF)
 #define CRIMSON newRgb(0xDC, 0x14, 0x3C)
 #endif /*COLORS*/
+#endif /* ifdef D_COLOR */

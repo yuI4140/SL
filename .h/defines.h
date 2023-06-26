@@ -53,6 +53,10 @@ typedef void (*vFnp)(void);
 // SizeofArray macro to get the number of elements in an array
 #define SizeofArray(arr) (sizeof(arr) / sizeof((arr)[0]))
 #endif /*DEF_ARRAY*/
+#ifdef DEF_BOOL
+#define BOOL_IMP
+#include "./bool.h"
+#endif /* DEF_BOOL */
 #ifdef DEF_STR
 // Stringification macros
 #define Stringify(x) #x
